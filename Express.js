@@ -3,8 +3,6 @@ var app = express()
 
 app.use(express.static('public'));
 
-
-
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore} = require('firebase-admin/firestore');
 var serviceAccount = require("./key.json");
@@ -28,7 +26,7 @@ app.get('/signupSubmit', function (req, res) {
         Email:req.query.email,
         Password:req.query.password,
     }).then(()=>{
-      res.send("signup sucessfull, please login ")
+        res.sendFile( __dirname + "/public/" + "homepage.html" );
     })
 })
 app.get('/login', function (req, res){
@@ -37,17 +35,16 @@ app.get('/login', function (req, res){
 })
 
 app.get("/loginSubmit", function (req,res) {  
-    console.log(req.query);
     db.collection('Users')
    .where("Email","==",req.query.email)
    .where("Password","==",req.query.password)
    .get()
    .then((docs)=>{
     if(docs.size>0){
-        res.send("successfull")
+        res.sendFile( __dirname + "/public/" + "homepage.html" );
     }
     else{
-        res.send("Fail")
+        res.send("Please sign up You don't have an account");
     }
    })
 })
